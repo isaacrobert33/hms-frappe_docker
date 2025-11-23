@@ -3,12 +3,12 @@ name: Deploy ERP to Staging Server
 on:
     pull_request:
         branches:
-            - stage
+            - main
         paths-ignore: ["docs/**"]
 
     push:
         branches:
-            - stage
+            - main
         paths-ignore: ["docs/**"]
 
 concurrency:
@@ -19,14 +19,14 @@ jobs:
     deploy:
         runs-on: ubuntu-latest
         # needs: [build-test-job]
-        environment: stage
+        environment: main
         if: ${{ github.event_name == 'push' }} # will be fired if the trigger event is a push event.
 
         steps:
             - name: Checkout Code Repository
               uses: actions/checkout@v3
               with:
-                  ref: stage
+                  ref: main
 
             - name: Copy repo files to server
               uses: appleboy/scp-action@master
