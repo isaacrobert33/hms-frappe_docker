@@ -48,31 +48,10 @@ services:
       - logs:/home/frappe/frappe-bench/logs
       - apps:/home/frappe/frappe-bench/apps
 
-  get-apps:
-    image: frappe/erpnext:v15.89.2
-    networks:
-      - frappe_network
-    deploy:
-      restart_policy:
-        condition: none
-    volumes:
-      - sites:/home/frappe/frappe-bench/sites
-      - logs:/home/frappe/frappe-bench/logs
-      - apps:/home/frappe/frappe-bench/apps
-    entrypoint:
-      - bash
-      - -c
-    command:
-      - >
-        bench get-app --branch version-15 https://github.com/frappe/hrms;
-        bench get-app --branch version-15 https://github.com/earthians/marley;
-
   create-site:
     image: frappe/erpnext:v15.89.2
     networks:
       - frappe_network
-    depends_on:
-      - get-apps
     deploy:
       restart_policy:
         condition: none
@@ -101,7 +80,7 @@ services:
           fi
         done;
         echo "sites/common_site_config.json found";
-        bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext --install-app hrms --install-app marley --set-default frontend;
+        bench new-site --mariadb-user-host-login-scope='%' --admin-password=admin --db-root-username=root --db-root-password=admin --install-app erpnext --set-default frontend;
 
   db:
     image: mariadb:10.6
